@@ -35,16 +35,16 @@ export class DashboardComponent implements OnInit {
     this.fromIndex += 10;
     this.toIndex += 10;
     
-    // let checkAnswer = _.filter(this.currentList, (item) => {
-    //   return !item.lCheck && !item.mCheck;
-    // });
-    // if (checkAnswer.length > 0) {
-    //   Swal.fire('Thông báo', 'Vul lòng trả lời hết các câu hỏi!', 'error');
-    // } else {
-    //   this.currentList = _.filter(this.list, (item) => {
-    //     return item.id > this.fromIndex && item.id <= this.toIndex;
-    //   });
-    // }
+    let checkAnswer = _.filter(this.currentList, (item) => {
+      return !item.lCheck && !item.mCheck;
+    });
+    if (checkAnswer.length > 0) {
+      Swal.fire('Thông báo', 'Vul lòng trả lời hết các câu hỏi!', 'error');
+    } else {
+      this.currentList = _.filter(this.list, (item) => {
+        return item.id > this.fromIndex && item.id <= this.toIndex;
+      });
+    }
 
     this.currentList = _.filter(this.list, (item) => {
       return item.id > this.fromIndex && item.id <= this.toIndex;
@@ -76,16 +76,16 @@ export class DashboardComponent implements OnInit {
   }
 
   fncShowModal() {
-    // let checkAnswer = _.filter(this.currentList, (item) => {
-    //   return !item.lCheck && !item.mCheck;
-    // });
-    // if (checkAnswer.length > 0) {
-    //   Swal.fire('Thông báo', 'Vul lòng trả lời hết các câu hỏi!', 'error');
-    // } else {
-    //   if (this.isLastPage) {
-    //     $("#exampleModal").modal();
-    //   }
-    // }
+    let checkAnswer = _.filter(this.currentList, (item) => {
+      return !item.lCheck && !item.mCheck;
+    });
+    if (checkAnswer.length > 0) {
+      Swal.fire('Thông báo', 'Vul lòng trả lời hết các câu hỏi!', 'error');
+    } else {
+      if (this.isLastPage) {
+        $("#exampleModal").modal();
+      }
+    }
     $("#exampleModal").modal();
   }
 
