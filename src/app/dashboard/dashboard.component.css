@@ -1,0 +1,56 @@
+.row {
+    margin: 0px !important;
+}
+.tutorial-display {
+    margin: 20px 0 20px 0;
+    height: 100px;
+    background-color: #4DB6AC;
+    line-height: 100px;
+}
+
+.tutorial-display>h4 {
+    line-height: 100px;
+    color: white;
+}
+
+/* css main */
+.css main {
+    margin-top: 20px;
+}
+
+.content-header {
+    height: 50px;
+    background-color: #00796B;
+    color: white;
+    text-align: center;
+}
+
+.content-header {
+    line-height: 50px;
+}
+
+.contain-body {
+    text-align: center;
+}
+.border-right {
+    border-right: 1px solid;
+    padding: 0px;
+}
+.content-row {
+    height: 40px;
+    line-height: 40px;
+    padding: 0px;
+    border-bottom: 1px dotted;
+}
+.contain-footer {
+    margin-top: 10px;
+}
+
+.get-result {
+    float: right;
+    margin-top: 10px;
+}
+
+::ng-deep .mat-checkbox .mat-checkbox-frame {
+    border-color: black;
+  }

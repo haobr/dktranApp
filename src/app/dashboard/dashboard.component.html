@@ -1,0 +1,78 @@
+
+<div class="row">
+    <!-- The tutorial -->
+    <div class="col-12 tutorial-display">
+        <h4>Hướng dẫn sử dụng phần mềm</h4>
+    </div>
+    <hr>  
+    <div class="col-12 main">
+        <div class="content-header">
+            <div class="row">
+                <div class="col-md-1 border-right">
+                    TT
+                </div>
+                <div class="col-md-3 border-right">
+                    Giống bạn nhất
+                </div>
+                <div class="col-md-5 border-right">
+                    Nội dung
+                </div>
+                <div class="col-md-3">
+                    Khác bạn nhất
+                </div>
+            </div>
+        </div>
+        <div class="contain-body">
+            <form>
+                <div class="row" *ngFor="let item of currentList">
+                    <div class="col-md-1 border-right content-row">
+                        {{item.id}}
+                    </div>
+                    <div class="col-md-3 border-right content-row">
+                        <mat-checkbox name="mCheck" [(ngModel)]="item.mCheck" (change)="fncCheckAnswer(item, 0)"></mat-checkbox>
+                    </div>
+                    <div class="col-md-5 border-right content-row">
+                        {{item.displayName}}
+                    </div>
+                    <div class="col-md-3 content-row">
+                        <mat-checkbox name="lCheck" [(ngModel)]="item.lCheck" (change)="fncCheckAnswer(item, 1)"></mat-checkbox>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-12 contain-footer">
+            <button class="btn btn-light" style="float: left;" (click)="fncPrevious()">Trước đó</button>
+            <button [disabled]="isLastPage" class="btn btn-light" style="float: right;" (click)="fncContinute()">Tiếp theo</button>
+        </div>
+        <div class="col-12 get-result">
+            <button *ngIf="isLastPage" class="btn btn-success" style="float: right;" (click)="fncShowModal()">Nhận kết quả</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Nhận kết quả</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="form-group">
+                <label for="">Email của bạn</label>
+                <input type="text" name="email" id="email" class="form-control" [(ngModel)]="email">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+            <button class="btn btn-primary" (click)="sendEmail()">Gửi</button>
+        </div>
+      </div>
+    </div>
+  </div>
