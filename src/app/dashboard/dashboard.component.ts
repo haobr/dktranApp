@@ -17,7 +17,7 @@ export class DashboardComponent implements OnInit {
   list: Question[] = [];
   currentList: Question[] = [];
   fromIndex = 0;
-  toIndex = 10;
+  toIndex = 4;
   isLastPage = false;
   lastList: Question;
   email: '';
@@ -32,14 +32,17 @@ export class DashboardComponent implements OnInit {
   }
 
   fncContinute() {
-    this.fromIndex += 10;
-    this.toIndex += 10;
-    
+    this.fromIndex += 4;
+    this.toIndex += 4;
+  // Thông báo warning khi không trả lời hết các câu hỏi
     let checkAnswer = _.filter(this.currentList, (item) => {
       return !item.lCheck && !item.mCheck;
     });
     if (checkAnswer.length > 0) {
       Swal.fire('Thông báo', 'Vul lòng trả lời hết các câu hỏi!', 'error');
+      this.fromIndex = this.fromIndex - 4;
+      this.toIndex = this.toIndex - 4;
+      return;
     } else {
       this.currentList = _.filter(this.list, (item) => {
         return item.id > this.fromIndex && item.id <= this.toIndex;
@@ -53,17 +56,16 @@ export class DashboardComponent implements OnInit {
     let lastCurrentQuest = _.last(this.currentList);
     if (lastCurrentQuest == this.lastList) this.isLastPage = true;
     else this.isLastPage = false;
-
-    
   }
 
   fncPrevious() {
+    this.isLastPage = false;
     if (this.fromIndex > 0) {
-      this.fromIndex = this.fromIndex - 10;
-      this.toIndex = this.toIndex - 10;
+      this.fromIndex = this.fromIndex - 4;
+      this.toIndex = this.toIndex - 4;
     } else {
       this.fromIndex = 0;
-      this.toIndex = 10;
+      this.toIndex = 4;
     }
     this.currentList = _.filter(this.list, (item) => {
       return item.id > this.fromIndex && item.id <= this.toIndex;
@@ -81,6 +83,7 @@ export class DashboardComponent implements OnInit {
     });
     if (checkAnswer.length > 0) {
       Swal.fire('Thông báo', 'Vul lòng trả lời hết các câu hỏi!', 'error');
+      return;
     } else {
       if (this.isLastPage) {
         $("#exampleModal").modal();

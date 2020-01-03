@@ -1,78 +1,88 @@
-
-<div class="row">
-    <!-- The tutorial -->
-    <div class="col-12 tutorial-display">
-        <h4>Hướng dẫn sử dụng phần mềm</h4>
+<div class="container">
+    <div class="col-md-12 tutorial-display">
+        <h2>Chọn đáp án bạn thấy đúng với mình nhất</h2>
     </div>
-    <hr>  
-    <div class="col-12 main">
-        <div class="content-header">
+    <div class="container col-md-8">
+        <div class="main">
             <div class="row">
-                <div class="col-md-1 border-right">
-                    TT
+                <div class="col-3 text-header">
+                    <label>Giống bạn nhất</label>
                 </div>
-                <div class="col-md-3 border-right">
-                    Giống bạn nhất
+                <div class="col-6 text-header">
+
                 </div>
-                <div class="col-md-5 border-right">
-                    Nội dung
+                <div class="col-3 text-header">
+                    <label>Khác bạn nhất</label>
                 </div>
-                <div class="col-md-3">
-                    Khác bạn nhất
+                <div class="col-12">
+                    <div class="question" *ngFor="let item of currentList">
+                        <form>
+                            <div class="row">
+                                <div class="col-3">
+                                    <label id="m-checkbox"><input type="checkbox"
+                                                [ngModelOptions]="{standalone: true}" [(ngModel)]="item.mCheck" (change)="fncCheckAnswer(item, 0)"></label>
+                                </div>
+                                <div class="col-6 text-break" style="text-align: center;">
+                                    <span [ngClass]="
+                                                {'text-normal': !item.mCheck && !item.lCheck,
+                                                'text-check-m': item.mCheck,
+                                                'text-check-l': item.lCheck
+                                                }">
+                                                {{item.displayName}}</span>
+                                </div>
+                                <div class="col-3" style="text-align: right;">
+                                    <label id="l-checkbox"><input type="checkbox"
+                                                [ngModelOptions]="{standalone: true}" [(ngModel)]="item.lCheck" (change)="fncCheckAnswer(item, 1)"></label>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
+                <!-- footer -->
+                <div class="footer fixed-bottom">
+                    <div class="container">
+                        <div class="col-12 text-center">
+                            <button [disabled]="fromIndex === 0" class="btn btn-light footer-button" style="float: left;" (click)="fncPrevious()">
+                                        <i class="fas fa-chevron-left"></i> Trước đó
+                                    </button>
+                            <button [disabled]="isLastPage" class="btn btn-light footer-button" style="float: right; " (click)="fncContinute()">
+                                        Tiếp theo <i class="fas fa-chevron-right"></i> 
+                                    </button>
+                            <button *ngIf="isLastPage" class="btn btn-success footer-button-popup" (click)="fncShowModal()" style="background-color: #4dbd38;">
+                                        Nhận kết quả</button>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
-        <div class="contain-body">
-            <form>
-                <div class="row" *ngFor="let item of currentList">
-                    <div class="col-md-1 border-right content-row">
-                        {{item.id}}
-                    </div>
-                    <div class="col-md-3 border-right content-row">
-                        <mat-checkbox name="mCheck" [(ngModel)]="item.mCheck" (change)="fncCheckAnswer(item, 0)"></mat-checkbox>
-                    </div>
-                    <div class="col-md-5 border-right content-row">
-                        {{item.displayName}}
-                    </div>
-                    <div class="col-md-3 content-row">
-                        <mat-checkbox name="lCheck" [(ngModel)]="item.lCheck" (change)="fncCheckAnswer(item, 1)"></mat-checkbox>
-                    </div>
-                </div>
-            </form>
-        </div>
-
-        <div class="col-12 contain-footer">
-            <button class="btn btn-light" style="float: left;" (click)="fncPrevious()">Trước đó</button>
-            <button [disabled]="isLastPage" class="btn btn-light" style="float: right;" (click)="fncContinute()">Tiếp theo</button>
-        </div>
-        <div class="col-12 get-result">
-            <button *ngIf="isLastPage" class="btn btn-success" style="float: right;" (click)="fncShowModal()">Nhận kết quả</button>
-        </div>
     </div>
+
 </div>
+
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Nhận kết quả</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #4dbd38; color: white;">
+                <h5 class="modal-title" id="exampleModalLabel">Nhận kết quả</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
-        </div>
-        <div class="modal-body">
-          <form>
-            <div class="form-group">
-                <label for="">Email của bạn</label>
-                <input type="text" name="email" id="email" class="form-control" [(ngModel)]="email">
             </div>
-          </form>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="">Email của bạn</label>
+                        <input type="text" name="email" id="email" class="form-control" [(ngModel)]="email">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" style="width: 80px;">Đóng</button>
+                <button class="btn btn-success" (click)="sendEmail()" style="width: 80px; background-color: #4dbd38;">Gửi</button>
+            </div>
         </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-            <button class="btn btn-primary" (click)="sendEmail()">Gửi</button>
-        </div>
-      </div>
     </div>
-  </div>
+</div>
