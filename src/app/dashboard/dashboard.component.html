@@ -23,12 +23,12 @@
                                                 [ngModelOptions]="{standalone: true}" [(ngModel)]="item.mCheck" (change)="fncCheckAnswer(item, 0)"></label>
                                 </div>
                                 <div class="col-6 text-break" style="text-align: center;">
-                                    <span [ngClass]="
+                                    <label [ngClass]="
                                                 {'text-normal': !item.mCheck && !item.lCheck,
                                                 'text-check-m': item.mCheck,
                                                 'text-check-l': item.lCheck
                                                 }">
-                                                {{item.displayName}}</span>
+                                                {{item.displayName}}</label>
                                 </div>
                                 <div class="col-3" style="text-align: right;">
                                     <label id="l-checkbox"><input type="checkbox"
@@ -40,17 +40,15 @@
                 </div>
                 <!-- footer -->
                 <div class="footer fixed-bottom">
-                    <div class="container">
-                        <div class="col-12 text-center">
-                            <button [disabled]="fromIndex === 0" class="btn btn-light footer-button" style="float: left;" (click)="fncPrevious()">
+                    <div class="container col-md-6 text-center">
+                        <button [disabled]="fromIndex === 0" class="btn btn-light footer-button" style="float: left;" (click)="fncPrevious()">
                                         <i class="fas fa-chevron-left"></i> Trước đó
                                     </button>
-                            <button [disabled]="isLastPage" class="btn btn-light footer-button" style="float: right; " (click)="fncContinute()">
+                        <button [disabled]="isLastPage" class="btn btn-light footer-button" style="float: right; " (click)="fncContinute()">
                                         Tiếp theo <i class="fas fa-chevron-right"></i> 
                                     </button>
-                            <button *ngIf="isLastPage" class="btn btn-success footer-button-popup" (click)="fncShowModal()" style="background-color: #4dbd38;">
+                        <button *ngIf="isLastPage" class="btn btn-success footer-button-popup" (click)="fncShowModal()" style="background-color: #4dbd38;">
                                         Nhận kết quả</button>
-                        </div>
                     </div>
                 </div>
 

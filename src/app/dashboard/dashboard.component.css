@@ -143,19 +143,10 @@
     h2 {
         font-size: 18px !important;
     }
-    .label {
-        font-size: 15px !important;
-    }
-    .text-header>label {
+    label {
         font-size: 15px !important;
     }
     .container {
         display: unset !important;
-    }
-    .footer-button {
-        margin-top: -14px;
-    }
-    .footer-button-popup {
-        margin-top: -14px;
     }
 }
