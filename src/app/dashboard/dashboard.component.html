@@ -1,61 +1,72 @@
 <div class="container">
-    <div class="col-md-12 tutorial-display">
-        <h2>Chọn đáp án bạn thấy đúng với mình nhất</h2>
-    </div>
-    <div class="container col-md-8">
-        <div class="main">
-            <div class="row">
-                <div class="col-3 text-header">
-                    <label>Giống bạn nhất</label>
+    <div class="row">
+        <div class="col-md-12 tutorial-display">
+            <h2>Chọn đáp án bạn thấy đúng với mình nhất</h2>
+        </div>
+        <div class="container col-md-8">
+            <div class="countdown-block col-12">
+                <div class="row">
+                    <label class="countdown-block-text">Thời gian</label>
+                    <countdown #cd [config]="config" (event)="handleEvent($event)"></countdown>
                 </div>
-                <div class="col-6 text-header">
-
-                </div>
-                <div class="col-3 text-header">
-                    <label>Khác bạn nhất</label>
-                </div>
-                <div class="col-12">
-                    <div class="question" *ngFor="let item of currentList">
-                        <form>
-                            <div class="row">
-                                <div class="col-3">
-                                    <label id="m-checkbox"><input type="checkbox"
-                                                [ngModelOptions]="{standalone: true}" [(ngModel)]="item.mCheck" (change)="fncCheckAnswer(item, 0)"></label>
-                                </div>
-                                <div class="col-6 text-break" style="text-align: center;">
-                                    <label [ngClass]="
-                                                {'text-normal': !item.mCheck && !item.lCheck,
-                                                'text-check-m': item.mCheck,
-                                                'text-check-l': item.lCheck
-                                                }">
-                                                {{item.displayName}}</label>
-                                </div>
-                                <div class="col-3" style="text-align: right;">
-                                    <label id="l-checkbox"><input type="checkbox"
-                                                [ngModelOptions]="{standalone: true}" [(ngModel)]="item.lCheck" (change)="fncCheckAnswer(item, 1)"></label>
-                                </div>
-                            </div>
-                        </form>
+                <div class="row">
+                    <label class="countdown-block-text">Tiến độ</label>
+                    <div class="progress col-8">
+                        <div class="progress-bar bg-success" role="progressbar" [style.width]="progressPercent + '%'" aria-valuenow="0" aria-valuemin="0" aria-valuemax="totalQuestion"></div>
                     </div>
                 </div>
-                <!-- footer -->
-                <div class="footer fixed-bottom">
-                    <div class="container col-md-6 text-center">
-                        <button [disabled]="fromIndex === 0" class="btn btn-light footer-button" style="float: left;" (click)="fncPrevious()">
-                                        <i class="fas fa-chevron-left"></i> Trước đó
-                                    </button>
-                        <button [disabled]="isLastPage" class="btn btn-light footer-button" style="float: right; " (click)="fncContinute()">
-                                        Tiếp theo <i class="fas fa-chevron-right"></i> 
-                                    </button>
-                        <button *ngIf="isLastPage" class="btn btn-success footer-button-popup" (click)="fncShowModal()" style="background-color: #4dbd38;">
-                                        Nhận kết quả</button>
+            </div>
+            <div class="main">
+                <div class="row">
+                    <div class="col-3 text-header">
+                        <label>Giống bạn nhất</label>
+                    </div>
+                    <div class="col-6 text-header">
+
+                    </div>
+                    <div class="col-3 text-header">
+                        <label>Khác bạn nhất</label>
+                    </div>
+                    <div class="col-12">
+                        <div class="question" *ngFor="let item of currentList">
+                            <form>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <label id="m-checkbox"><input type="checkbox"
+                                                    [ngModelOptions]="{standalone: true}" [(ngModel)]="item.mCheck" (change)="fncCheckAnswer(item, 0)"></label>
+                                    </div>
+                                    <div class="col-6 text-break" style="text-align: center;">
+                                        <label [ngClass]="
+                                                    {'text-normal': !item.mCheck && !item.lCheck,
+                                                    'text-check-m': item.mCheck,
+                                                    'text-check-l': item.lCheck
+                                                    }">
+                                                    {{item.displayName}}</label>
+                                    </div>
+                                    <div class="col-3" style="text-align: right;">
+                                        <label id="l-checkbox"><input type="checkbox"
+                                                    [ngModelOptions]="{standalone: true}" [(ngModel)]="item.lCheck" (change)="fncCheckAnswer(item, 1)"></label>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
-
+            </div>
+            <div class="footer fixed-bottom">
+                <div class="container col-md-6 text-center">
+                    <button [disabled]="fromIndex === 0" class="btn btn-light footer-button" style="float: left;" (click)="fncPrevious()">
+                                    <i class="fas fa-chevron-left"></i> Trước đó
+                                </button>
+                    <button [disabled]="isLastPage" class="btn btn-light footer-button" style="float: right; " (click)="fncContinute()">
+                                    Tiếp theo <i class="fas fa-chevron-right"></i> 
+                                </button>
+                    <button *ngIf="isLastPage" class="btn btn-success footer-button-popup" (click)="fncShowModal()" style="background-color: #4dbd38;">
+                                    Nhận kết quả</button>
+                </div>
             </div>
         </div>
     </div>
-
 </div>
 
 

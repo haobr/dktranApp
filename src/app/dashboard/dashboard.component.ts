@@ -1,15 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { QUESTIONS } from '../shared/mock-questions';
 import { Question } from '../shared/question';
 import * as _ from 'lodash';
 import Swal from 'sweetalert2';
+import { CountdownComponent } from 'ngx-countdown';
 declare var $: any;
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, AfterViewInit {
+  
+  
 
   constructor() { }
 
@@ -21,6 +24,16 @@ export class DashboardComponent implements OnInit {
   isLastPage = false;
   lastList: Question;
   email: '';
+  isSubmit = false;
+  progressPercent = 0;
+  totalQuestion = 0;
+  
+  @ViewChild('cd', { static: false }) private countdown: CountdownComponent;
+  config = {
+    leftTime: 600,
+    notify: [ 1, 1 ] // Thông báo khi hết giờ
+    // format: 'm:s'
+  }
 
   ngOnInit() {
     this.check = true;
@@ -29,6 +42,12 @@ export class DashboardComponent implements OnInit {
       return item.id > this.fromIndex && item.id <= this.toIndex;
     });
     this.lastList = _.last(this.list);
+    
+    this.totalQuestion = this.list.length;
+  }
+
+  ngAfterViewInit(): void {
+    this.countdown.begin();
   }
 
   fncContinute() {
@@ -75,6 +94,12 @@ export class DashboardComponent implements OnInit {
   fncCheckAnswer(item: Question, type: number) {
     if (type == 0) item.lCheck = !item.mCheck;
     else if (type == 1) item.mCheck = !item.lCheck;
+    // thay đổi thanh tiến độ làm
+    let mList = _.filter(this.list, (item) =>{
+      return item.lCheck != item.mCheck;
+    });
+    let quantity = mList.length;
+    this.progressPercent = quantity;
   }
 
   fncShowModal() {
@@ -90,9 +115,18 @@ export class DashboardComponent implements OnInit {
       }
     }
     $("#exampleModal").modal();
+    this.isSubmit = true;
+    this.countdown.stop();
   }
 
   sendEmail() {
     console.log(this.email);
+  }
+
+  // Xử lý countdown
+  handleEvent(event: any) {
+    if (event.action == 'notify' && !this.isSubmit) {
+      window.location.reload();
+    }
   }
 }
