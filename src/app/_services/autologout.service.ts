@@ -3,7 +3,7 @@ import { Injectable, NgZone } from '@angular/core';
 import * as store from 'store';
 import { AuthenticationService } from './authentication.service';
 
-const MINUTES_UNITL_AUTO_LOGOUT = 20 // in Minutes
+const MINUTES_UNITL_AUTO_LOGOUT = 1440 // 1 day
 const CHECK_INTERVALL = 1000 // in ms
 const STORE_KEY = 'lastAction';
 
