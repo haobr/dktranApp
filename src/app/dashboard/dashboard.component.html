@@ -3,7 +3,7 @@
         <div class="col-md-12 tutorial-display">
             <h2>Chọn đáp án bạn thấy đúng với mình nhất</h2>
         </div>
-        <div class="container col-md-8">
+        <div class="col-md-12">
             <div class="countdown-block col-12">
                 <div class="row">
                     <label class="countdown-block-text">Thời gian</label>
@@ -18,13 +18,13 @@
             </div>
             <div class="main">
                 <div class="row">
-                    <div class="col-3 text-header">
+                    <div class="col-3 text-header" style="text-align: left;">
                         <label>Giống bạn nhất</label>
                     </div>
                     <div class="col-6 text-header">
 
                     </div>
-                    <div class="col-3 text-header">
+                    <div class="col-3 text-header" style="text-align: right;">
                         <label>Khác bạn nhất</label>
                     </div>
                     <div class="col-12">
@@ -53,21 +53,25 @@
                     </div>
                 </div>
             </div>
-            <div class="footer fixed-bottom">
-                <div class="container col-md-6 text-center">
-                    <button [disabled]="fromIndex === 0" class="btn btn-light footer-button" style="float: left;" (click)="fncPrevious()">
-                                    <i class="fas fa-chevron-left"></i> Trước đó
-                                </button>
-                    <button [disabled]="isLastPage" class="btn btn-light footer-button" style="float: right; " (click)="fncContinute()">
-                                    Tiếp theo <i class="fas fa-chevron-right"></i> 
-                                </button>
-                    <button *ngIf="isLastPage" class="btn btn-success footer-button-popup" (click)="fncShowModal()" style="background-color: #4dbd38;">
-                                    Nhận kết quả</button>
-                </div>
-            </div>
+
         </div>
     </div>
 </div>
+
+<div id="sticker-footer" class="fixed-bottom">
+    <div class="container text-center">
+        <button [disabled]="fromIndex === 0" class="btn btn-light footer-button" style="float: left;" (click)="fncPrevious()">
+                            <i class="fas fa-chevron-left"></i> Trước đó
+                        </button>
+        <button [disabled]="isLastPage" class="btn btn-light footer-button" style="float: right; " (click)="fncContinute()">
+                            Tiếp theo <i class="fas fa-chevron-right"></i> 
+                        </button>
+        <button *ngIf="isLastPage" class="btn btn-success footer-button-popup" (click)="fncShowModal()" style="background-color: #4dbd38;">
+                            Nhận kết quả</button>
+    </div>
+</div>
+
+
 
 
 <!-- Modal -->

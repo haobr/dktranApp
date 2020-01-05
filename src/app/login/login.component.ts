@@ -36,9 +36,6 @@ export class LoginComponent implements OnInit {
 
         // get return url from route parameters or default to '/'
         this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
-        // Xóa local storeage
-        // JSON.parse(localStorage.getItem('currentUser'));
-        // localStorage.removeItem("currentUser");
     }
 
     // convenience getter for easy access to form fields
@@ -56,22 +53,13 @@ export class LoginComponent implements OnInit {
         }
 
         this.loading = true;
-
-        let user = this.authenticationService.login(this.f.username.value, this.f.password.value)
-        
-            // .subscribe(
-            //     data => {
-            //         this.router.navigate([this.returnUrl]);
-            //     },
-            //     error => {
-            //         this.alertService.error(error);
-            //         this.loading = false;
-            //     });
-        if (user)  {
-            this.router.navigate([this.returnUrl]);
-        } else {
-            this.alertService.error("Lỗi!");
-            this.loading = false;
-        }
+        this.authenticationService.login(this.f.username.value, this.f.password.value).subscribe(
+            res =>{
+                this.router.navigate([this.returnUrl]);
+            }, err => {
+                this.alertService.error("Thông tin tài khoản không chính xác!");
+                this.loading = false;
+            }
+        );
     }
 }
