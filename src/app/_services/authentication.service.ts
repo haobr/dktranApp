@@ -11,7 +11,7 @@ export class AuthenticationService {
     private currentUserSubject: BehaviorSubject<User>;
     public currentUser: Observable<User>;
 
-    url = 'http://100.26.251.58:3100/api/login/';
+    url = 'https://dev-tc-chatbot.aa.akaminds.co.jp/api/login/';
 
     constructor(private http: HttpClient) {
         this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
