@@ -15,6 +15,7 @@ import { AlertService } from './_services/alert.service';
 import { LoginComponent } from './login/login.component';
 import { AuthenticationService } from './_services/authentication.service';
 import { AutoLogoutService } from './_services/autologout.service';
+import { MailService } from './_services/email.service';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import { AutoLogoutService } from './_services/autologout.service';
   providers: [
     AuthenticationService,
     AlertService,
-    AutoLogoutService
+    AutoLogoutService,
+    MailService
   ],
   bootstrap: [AppComponent]
 })
