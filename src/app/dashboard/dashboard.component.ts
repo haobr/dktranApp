@@ -4,7 +4,7 @@ import { Question } from '../shared/question';
 import * as _ from 'lodash';
 import Swal from 'sweetalert2';
 import { CountdownComponent } from 'ngx-countdown';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { AlertService } from '../_services/alert.service';
 import { MailService } from '../_services/email.service';
 import { timeout } from 'rxjs/operators';
@@ -46,8 +46,11 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.form = this.formBuilder.group({
-      name: ['', Validators.required],
-      email: ['', Validators.required]
+      name: new FormControl('', Validators.required),
+      email: new FormControl('', Validators.compose([
+        Validators.required,
+        Validators.pattern('^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$')
+      ])) 
     });
 
     this.check = true;
@@ -213,7 +216,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     this._service.postData(data).subscribe(
       (res) => {
         $("#exampleModal").modal('hide');
-
         Swal.fire({
           icon: 'success',
           title: 'Kết quả bài test của bạn đã được gửi qua email',
@@ -242,5 +244,10 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     if (event.action == 'notify' && !this.isSubmit) {
       window.location.reload();
     }
+  }
+
+  closeModal() {
+    this.form.reset();
+    $("#exampleModal").modal('hide');
   }
 }
