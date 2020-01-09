@@ -66,10 +66,8 @@
         <button [disabled]="isLastPage" class="btn btn-light footer-button" style="float: right; " (click)="fncContinute()">
                             Tiếp theo <i class="fas fa-chevron-right"></i> 
                         </button>
-        <!-- <button *ngIf="isLastPage" class="btn btn-success footer-button-popup" (click)="fncShowModal()" style="background-color: #4dbd38;">
-                            Nhận kết quả</button> -->
-        <button class="btn btn-success footer-button-popup" (click)="fncShowModal()" style="background-color: #4dbd38;">
-                                Nhận kết quả</button>
+        <button *ngIf="isLastPage" class="btn btn-success footer-button-popup" (click)="fncShowModal()" style="background-color: #4dbd38;">
+                            Nhận kết quả</button>
     </div>
 </div>
 
