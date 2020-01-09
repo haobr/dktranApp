@@ -4,10 +4,10 @@ import { Question } from '../shared/question';
 import * as _ from 'lodash';
 import Swal from 'sweetalert2';
 import { CountdownComponent } from 'ngx-countdown';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AlertService } from '../_services/alert.service';
 import { MailService } from '../_services/email.service';
-import { isBuffer } from 'util';
+import { timeout } from 'rxjs/operators';
 declare var $: any;
 @Component({
   selector: 'app-dashboard',
@@ -15,6 +15,7 @@ declare var $: any;
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit, AfterViewInit {
+
 
   check = true;
   list: Question[] = [];
@@ -27,14 +28,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   isSubmit = false;
   progressPercent = 0;
   totalQuestion = 0;
-
-  // form modal
   form: FormGroup;
   submitted = false;
-  constructor(private formBuilder: FormBuilder,
-    private alertService: AlertService,
-    private _mailService: MailService
-  ) { }
 
   @ViewChild('cd', { static: false }) private countdown: CountdownComponent;
   config = {
@@ -43,10 +38,18 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     // format: 'm:s'
   }
 
+  constructor(
+    private formBuilder: FormBuilder,
+    private alertService: AlertService,
+    private _service: MailService
+  ) { }
+
   ngOnInit() {
-    this.form = this.formBuilder.group(
-      { name: ['', Validators.required], email: ['', Validators.required] }
-      );
+    this.form = this.formBuilder.group({
+      name: ['', Validators.required],
+      email: ['', Validators.required]
+    });
+
     this.check = true;
     this.list = QUESTIONS;
     this.currentList = _.filter(this.list, (item) => {
@@ -54,40 +57,33 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     });
     this.lastList = _.last(this.list);
 
-    this.totalQuestion = this.list.length;
+    this.totalQuestion = this.list.length / 2;
   }
 
   ngAfterViewInit(): void {
     this.countdown.begin();
   }
 
-  // convenience getter for easy access to form fields
-  get f() { return this.form.controls; }
-
   fncContinute() {
     this.fromIndex += 4;
     this.toIndex += 4;
     // Thông báo warning khi không trả lời hết các câu hỏi
-    // let checkAnswer = _.filter(this.currentList, (item) => {
-    //   return !item.lCheck && !item.mCheck;
-    // });
+    let quantity = 0;
+    _.forEach(this.currentList, (item) => {
+      if (item.lCheck) quantity++;
+      if (item.mCheck) quantity++;
+    });
 
-    // let quantity = 0;
-    // _.forEach(this.currentList, (item) => {
-    //   if (item.lCheck) quantity++;
-    //   if (item.mCheck) quantity++;
-    // });
-
-    // if (quantity != 2) {
-    //   Swal.fire('Thông báo', 'Vul lòng trả hai câu hỏi!', 'error');
-    //   this.fromIndex = this.fromIndex - 4;
-    //   this.toIndex = this.toIndex - 4;
-    //   return;
-    // } else {
-    //   this.currentList = _.filter(this.list, (item) => {
-    //     return item.id > this.fromIndex && item.id <= this.toIndex;
-    //   });
-    // }
+    if (quantity != 2) {
+      Swal.fire('Thông báo', 'Vul lòng trả hai câu hỏi!', 'error');
+      this.fromIndex = this.fromIndex - 4;
+      this.toIndex = this.toIndex - 4;
+      return;
+    } else {
+      this.currentList = _.filter(this.list, (item) => {
+        return item.id > this.fromIndex && item.id <= this.toIndex;
+      });
+    }
 
     this.currentList = _.filter(this.list, (item) => {
       return item.id > this.fromIndex && item.id <= this.toIndex;
@@ -119,15 +115,14 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     // chỉ được chọn tối đa 2 câu trả lời
     _.forEach(this.currentList, (elem) => {
       if (elem != item) {
-        if(item.mCheck) {
+        if (item.mCheck) {
           elem.mCheck = false;
-        } 
-        if(item.lCheck) {
+        }
+        if (item.lCheck) {
           elem.lCheck = false;
         }
       }
     });
-
     // thay đổi thanh tiến độ làm
     let mList = _.filter(this.list, (item) => {
       return item.lCheck != item.mCheck;
@@ -137,18 +132,14 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   }
 
   fncShowModal() {
-    let checkAnswer = _.filter(this.currentList, (item) => {
-      return !item.lCheck && !item.mCheck;
-    });
-
+    // Thông báo warning khi không trả lời hết các câu hỏi
     let quantity = 0;
     _.forEach(this.currentList, (item) => {
       if (item.lCheck) quantity++;
       if (item.mCheck) quantity++;
     });
-
     if (quantity != 2) {
-      Swal.fire('Thông báo', 'Vul lòng trả lời hết các câu hỏi!', 'error');
+      Swal.fire('Thông báo', 'Vul lòng trả hai câu hỏi!', 'error');
       return;
     } else {
       if (this.isLastPage) {
@@ -160,90 +151,90 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     this.countdown.stop();
   }
 
+  get f() { return this.form.controls; }
+
   sendEmail() {
     this.submitted = true;
     // reset alerts on submit
     this.alertService.clear();
-
     // stop here if form is invalid
     if (this.form.invalid) {
       return;
     }
-
-    // Send data to server
-    let email = this.f.email.value;
     let name = this.f.name.value;
-
+    let email = this.f.email.value;
     let answers = this.list.map((item) => {
       if (item.lCheck && !item.mCheck) return 'L';
       if (!item.lCheck && item.mCheck) return 'M';
       return '';
-    })
+    });
 
-    // prepare data
-    let bodyData = {
-      "user_name": email,
-      "user_email": name,
-      "user_answer": answers,
-      "total_answer_time": 10.4
+    let data = {
+      user_name: name,
+      user_email: email,
+      user_answer: answers,
+      user_job: "111",
+      total_answer_time: 10.4
     };
-    this._mailService.postData(bodyData).subscribe(
-      res => {
+
+    this._service.postData(data).subscribe(
+      (res) => {
+        $("#exampleModal").modal('hide');
+
         Swal.fire({
-          position: 'top-end',
           icon: 'success',
-          title: 'Kết quả bài test của bạn đã được gửi qua email.',
-          html: 'Vui lòng kiểm tra để xác nhận. Mọi thông tin chi tiết xin vui lòng liên hệ hotline <strong>0972177047</strong>'
+          title: 'Kết quả bài test của bạn đã được gửi qua email',
+          html: 'Vui lòng kiểm tra để xác nhận. Mọi thông tin chi tiết xin vui lòng liên hệ hotline <strong>0972177047</strong>',
+        }).then(res => {
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
         });
-      }, err => {
-        if (err.status == 404) {
-          Swal.fire('Lỗi', err.message);
-        }
+      }, (err) => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Server xử lí kết quả lỗi. ',
+          html: 'Vui lòng ấn nút "Gửi lại" để gửi lại kết quả qua email',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          cancelButtonText: 'Đóng',
+          confirmButtonText: 'Gửi lại'
+        }).then(result => {
+          if (result.value) {
+           this.reSendEmail(data);
+          }
+        })
       }
-    );
+    )
   }
 
-  reSendMail() {
-    this.submitted = true;
-    // reset alerts on submit
-    this.alertService.clear();
+  reSendEmail(data:any) {
+    this._service.postData(data).subscribe(
+      (res) => {
+        $("#exampleModal").modal('hide');
 
-    // stop here if form is invalid
-    // if (this.form.invalid) {
-    //   return;
-    // }
-
-    // Send data to server
-    let email = this.f.email.value;
-    let name = this.f.name.value;
-
-    let answers = this.list.map((item) => {
-      if (item.lCheck && !item.mCheck) return 'L';
-      if (!item.lCheck && item.mCheck) return 'M';
-      return '';
-    })
-
-    // prepare data
-    let bodyData = {
-      "user_name": email,
-      "user_email": name,
-      "user_answer": answers,
-      "total_answer_time": 10.4
-    };
-    this._mailService.postData(bodyData).subscribe(
-      res => {
         Swal.fire({
-          position: 'top-end',
           icon: 'success',
-          title: 'Kết quả bài test của bạn đã được gửi qua email.',
-          html: 'Vui lòng kiểm tra để xác nhận. Mọi thông tin chi tiết xin vui lòng liên hệ hotline <strong>0972177047</strong>'
+          title: 'Kết quả bài test của bạn đã được gửi qua email',
+          html: 'Vui lòng kiểm tra để xác nhận. Mọi thông tin chi tiết xin vui lòng liên hệ hotline <strong>0972177047</strong>',
+        }).then(res => {
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
         });
-      }, err => {
-        if (err.status == 404) {
-          Swal.fire('Lỗi', err.message);
-        }
+      }, (err) => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Server đang bận!',
+          text: 'Vui lòng quay lại sau'
+        }).then(res => {
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+        });
       }
-    );
+    )
   }
 
   // Xử lý countdown
@@ -251,23 +242,5 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     if (event.action == 'notify' && !this.isSubmit) {
       window.location.reload();
     }
-  }
-
-  show() {
-    Swal.fire({
-      icon: 'error',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      cancelButtonText:'Đóng',
-      confirmButtonText: 'Gửi lại',
-      title: 'Server xử lí kết quả lỗi!',
-      html: 'Vui lòng ấn nút "Gửi lại" để gửi lại kết quả qua email'
-    }).then((result) => {
-      if (result.value) {
-        // Gửi lại email
-        this.reSendMail();
-      }
-    });
   }
 }
